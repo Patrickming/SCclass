@@ -15,11 +15,12 @@ from StudentsList import Students
 # Class ContractTest is base class which implements general test behaviours.
 # Each inherited class of ContractTest implements special test behaviours for each contract or solidity file.
 class ContractTest(ABC):
+    # Do not modify following 4 flag indices
     STUDENT_NUMBER_FLAG_INDEX = 0
     FILE_CHECK_FLAG_INDEX = 1
     COMPILE_FLAG_INDEX = 2
     DEPLOY_FLAG_INDEX = 3
-    RETURN_STRING_FLAG_INDEX = 4
+    # The flag index of derived class shall start from 4
 
     def __init__(
             self,
@@ -145,7 +146,17 @@ class ContractTest(ABC):
             print("\033[0;31;40mException: " + str(e) + "\033[0m")
 
         return return_value
-
+    # 调用合约构造函数构造合约
+    def construct_contract(self,nonce,eoa_index):
+        return self.current_contract.constructor().buildTransaction(
+                {
+                    # "chainId": chain_id,
+                    "gas": 30000000,
+                    "gasPrice": self.web3.eth.gas_price,
+                    "from": self.config.configuration[Configuration.ACCOUNTS][eoa_index][Configuration.ADDRESS],
+                    "nonce": nonce,
+                }
+            )
     def deploy_contract(self, contract_abi, contract_bin, eoa_index):
         result = False
         contract_address = None
@@ -161,15 +172,7 @@ class ContractTest(ABC):
             # print("Debug: eth.chain_id = " + str(self.web3.eth.chain_id))
             # print("Debug: eth.gas_price = " + str(self.web3.eth.gas_price))
             # print("Debug: nonce = " + str(nonce))
-            transaction = self.current_contract.constructor().buildTransaction(
-                {
-                    # "chainId": chain_id,
-                    "gas": 30000000,
-                    "gasPrice": self.web3.eth.gas_price,
-                    "from": self.config.configuration[Configuration.ACCOUNTS][eoa_index][Configuration.ADDRESS],
-                    "nonce": nonce,
-                }
-            )
+            transaction = self.construct_contract(nonce,eoa_index)
             sign_transaction = self.web3.eth.account.sign_transaction(
                 transaction,
                 private_key=self.config.configuration[Configuration.ACCOUNTS][eoa_index][Configuration.PRIVATE_KEY]
@@ -296,42 +299,27 @@ class ContractTest(ABC):
 
         return return_value
 
+    # Abstract method used to add test results,
+    # Each subclass should implement this abstract
+    # for it has its own test logic and check point.
+    @abstractmethod
     def init_test_result(self, test_result):
-        test_result.append(0)
+        # test_result.append(0)
         pass
 
     def check_read_word(self, read_str: str) -> bool:
         return True
 
     @abstractmethod
-    def judge(self) -> Tuple[bool, object, object]:
-        pass
-
+    # def judge(self) -> Tuple[bool, object, object]:
+    #     pass
+    #
     def execute(self):
-        print("Executing test case.")
-        return_value = False
-
-        # Call
-        try:
-            res, returned_string, expected_string = self.judge()
-            print("retrunstr:", returned_string)
-            if res:
-                return_value = True
-                self.test_results[self.current_student_index][ContractTest.RETURN_STRING_FLAG_INDEX] = 1
-                print("Executed successfully.")
-            else:
-                print("\033[0;31;40mTest case failure: expected_string = " + expected_string + "\033[0m")
-                print("\033[0;31;40m                   returned_string = " + returned_string + "\033[0m")
-        except Exception as e:
-            print("\033[0;31;40mException: " + str(e) + "\033[0m")
-
-        return return_value
+        pass
 
     def clear(self):
         print("Clear test case solidity file.")
         return True
-
-
 
     def check_files(self, index):
         result = False
@@ -350,19 +338,20 @@ class ContractTest(ABC):
                 file_name
             )
             # 获取当前脚本的绝对路径
-            current_dir = os.path.dirname(os.path.abspath(__file__))
+            # current_dir = os.path.dirname(os.path.abspath(__file__))
             # 构建相对路径文件的绝对路径,方便排错
-            full_path_name = os.path.join(current_dir, full_path_name)
+            # full_path_name = os.path.join(current_dir, full_path_name)
 
             file[Configuration.FILE_NAME] = full_path_name
             if os.path.exists(full_path_name):
-                fileCheck = open(full_path_name, "r", encoding="utf-8")
-                strRead = fileCheck.read()
-                # self中的在部署前进行白盒检查，如果为True继续部署，为False则终止
-                result = self.check_read_word(strRead)
-                if not result:
-                    print("\033[0;31;40mInvalid str.\033[0m")
-                    break
+                result = True
+                # fileCheck = open(full_path_name, "r", encoding="utf-8")
+                # strRead = fileCheck.read()
+                # # self中的在部署前进行白盒检查，如果为True继续部署，为False则终止
+                # result = self.check_read_word(strRead)
+                # if not result:
+                #     print("\033[0;31;40mInvalid str.\033[0m")
+                #     break
             else:
                 print("\033[0;31;40mTest case failure: Solidity file %s does not exist.\033[0m" %
                       full_path_name)

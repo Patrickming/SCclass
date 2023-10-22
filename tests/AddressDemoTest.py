@@ -34,7 +34,7 @@ def StringUtilToByte32(hex_string: str) -> (bytes, str):
 
     byte_array = bytes.fromhex(hex_string[2:])
     # 截取前20个字节
-    excepted_result = byte_array[:20]
+    excepted_result = byte_array[12:]
 
     # 截取前20个字节
     excepted_result = excepted_result.hex()
@@ -57,7 +57,7 @@ class AddressDemoTest(ContractTest):
     def __init__(self):
         self.configuration = Configuration(os.path.basename(__file__))
         ContractTest.__init__(self, self.configuration)
-        # Set the contract name to be test.
+        # Set the contract name to be tested.
         self.contract_test_name = "AddressDemo"
         pass
 
@@ -103,6 +103,7 @@ class AddressDemoTest(ContractTest):
             else:
                 print("\033[0;31;40mTest case failure: expected_string = " + expected_string + "\033[0m")
                 print("\033[0;31;40m                   returned_string = " + returned_string + "\033[0m")
+                print("\033[0;31;40m                   input_address   = " + byte32_hex_str + "\033[0m")
         except Exception as e:
             print("\033[0;31;40mException: " + str(e) + "\033[0m")
 
