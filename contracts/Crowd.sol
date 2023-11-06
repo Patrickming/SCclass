@@ -32,8 +32,7 @@ contract Crowd {
     }
 
     function withdraw(uint value) public payable onlyBeneficiary {
-        require(address(this).balance >= totalDonateValue, "The balance is not enough.");
-        totalDonateValue -= value;
+        require(address(this).balance >= value, "The balance is not enough.");
         payable(beneficiary).transfer(totalDonateValue);
     }
 }
