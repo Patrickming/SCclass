@@ -40,6 +40,7 @@ class HelloMyWorldTest(ContractTest):
         result = True
         for_used = False
         string_util_compare_used = False
+        keccak256_used = False
         zhang_san_used = False
         string_concat_used = False
         encode_packed_used = False
@@ -50,8 +51,12 @@ class HelloMyWorldTest(ContractTest):
             if 'for' in line and 'using' not in line:
                 for_used = True
 
-            if 'StringUtil.compare' in line:
+            # if 'StringUtil.compare' in line:
+            if '.compare' in line:
                 string_util_compare_used = True
+
+            if 'keccak256' in line:
+                keccak256_used = True
 
             if 'Zhang San.' in line:
                 zhang_san_used = True
@@ -67,7 +72,7 @@ class HelloMyWorldTest(ContractTest):
         else:
             self.test_results[self.current_student_index][HelloMyWorldTest.FOR_NOT_USED_FLAG_INDEX] = 1
 
-        if not string_util_compare_used:
+        if not string_util_compare_used and not keccak256_used:
             print("\033[0;31;40mTest case failure: Shall use StringUtil.compare to compare string\033[0m")
         else:
             self.test_results[self.current_student_index][HelloMyWorldTest.COMPARE_USED_FLAG_INDEX] = 1

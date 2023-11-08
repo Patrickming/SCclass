@@ -243,6 +243,15 @@ class Students:
 
         name_pinyin = ''.join(word_pinyin_list_new)
 
+        if self.students_list[student_index][Students.STUDENT_NUMBER_INDEX] == '2021131038':
+            name_pinyin = 'Zhang XinCheng'
+
+        if self.students_list[student_index][Students.STUDENT_NUMBER_INDEX] == '2021131068':
+            name_pinyin = 'Zeng Yugao'
+
+        if self.students_list[student_index][Students.STUDENT_NUMBER_INDEX] == '2021131105':
+            name_pinyin = 'Peng Zhiwei'
+
         return name_pinyin
 
 
