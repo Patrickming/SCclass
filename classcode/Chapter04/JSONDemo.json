@@ -1,0 +1,74 @@
+[
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "available",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "required",
+				"type": "uint256"
+			}
+		],
+		"name": "InsufficientBalance",
+		"type": "error"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "a",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "bytes32",
+				"name": "b",
+				"type": "bytes32"
+			}
+		],
+		"name": "Event",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "a",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "bytes32",
+				"name": "b",
+				"type": "bytes32"
+			}
+		],
+		"name": "Event2",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "a",
+				"type": "uint256"
+			}
+		],
+		"name": "foo",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+]
