@@ -47,9 +47,10 @@ describe("HelloWorld contract", function () {
   });
 
   describe("Transactions", function () {
-  	  var expectedString = "Hello World! My name is Zhang San."
+    var expectedString = "Hello World! My name is Xia Ruoming."
     it("Should be '" + expectedString + "'", async function () {
-    	 var result = await hardhatHelloWorld.myFirstHelloWorld();
+      var result = await hardhatHelloWorld.myFirstHelloWorld();
+      // console.log("hardhatHelloWorld.myFirstHelloWorld():", result);
       expect(result).to.equal(expectedString);
     });
   });

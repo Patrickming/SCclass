@@ -20,7 +20,11 @@ class ContractTest(ABC):
     FILE_CHECK_FLAG_INDEX = 1
     COMPILE_FLAG_INDEX = 2
     DEPLOY_FLAG_INDEX = 3
-    # The flag index of derived class shall start from 4
+    # The flag index of derived class shall start from 4 in extend class
+
+    # Address of deployer
+    DEPLOYER_ADDRESS_INDEX = 0
+    # The address index of other roles shall start from 1 in extend class
 
     def __init__(
             self,
@@ -146,8 +150,9 @@ class ContractTest(ABC):
             print("\033[0;31;40mException: " + str(e) + "\033[0m")
 
         return return_value
+
     # 调用合约构造函数构造合约
-    def construct_contract(self,nonce,eoa_index):
+    def construct_contract(self, nonce, eoa_index):
         return self.current_contract.constructor().buildTransaction(
                 {
                     # "chainId": chain_id,
@@ -157,6 +162,8 @@ class ContractTest(ABC):
                     "nonce": nonce,
                 }
             )
+
+    # @abstractmethod
     def deploy_contract(self, contract_abi, contract_bin, eoa_index):
         result = False
         contract_address = None
@@ -172,7 +179,7 @@ class ContractTest(ABC):
             # print("Debug: eth.chain_id = " + str(self.web3.eth.chain_id))
             # print("Debug: eth.gas_price = " + str(self.web3.eth.gas_price))
             # print("Debug: nonce = " + str(nonce))
-            transaction = self.construct_contract(nonce,eoa_index)
+            transaction = self.construct_contract(nonce, eoa_index)
             sign_transaction = self.web3.eth.account.sign_transaction(
                 transaction,
                 private_key=self.config.configuration[Configuration.ACCOUNTS][eoa_index][Configuration.PRIVATE_KEY]
@@ -204,7 +211,8 @@ class ContractTest(ABC):
         result = False
         library = None
 
-        if len(self.config.configuration[Configuration.COPIED_FILES]) > 0:
+        if len(self.config.configuration[Configuration.COPIED_FILES]) > 0 and \
+                len(self.config.configuration[Configuration.LIBRARIES]) > 0:
             for library in self.config.configuration[Configuration.LIBRARIES]:
                 key_pattern = library[Configuration.FILE_NAME] + ":" + library[Configuration.LIBRARY_NAME]
 
@@ -225,11 +233,9 @@ class ContractTest(ABC):
 
                 if not result:
                     break
-
-            if result:
-                print("Deployed solidity libraries.")
         else:
             result = True
+            print("Deployed solidity libraries.")
 
         return result
 
